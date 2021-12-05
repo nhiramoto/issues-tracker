@@ -13,20 +13,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    services:
-      mariadb:
-        image: mariadb:latest
-        ports:
-          - 3306
-        env:
-          MYSQL_HOST: 127.0.0.1
-          MYSQL_DATABASE: issues-tracker
-          MYSQL_USER: dbtester
-          MYSQL_PASSWORD: dbpassword
-          MYSQL_ROOT_PASSWORD: dbpassword
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
-
     steps:
       - uses: actions/checkout@v2
 
@@ -36,13 +22,22 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-      - name: Verify MariaDB connection
-        env:
-          PORT: 3306
-        run: |
-          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
-            sleep 1
-          done
+      # - name: Download Maven
+      #   run: |
+      #     curl -sL https://www-eu.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.zip -o maven.zip
+      #     apt-get update
+      #     apt-get -y install unzip
+      #     unzip -d /usr/share maven.zip
+      #     rm maven.zip
+      #     ln -s /usr/share/apache-maven-3.6.3/bin/mvn /usr/bin/mvn
+      #     echo "M2_HOME=/usr/share/apache-maven-3.6.3" | tee -a /etc/environment
+
+      - name: Set up MariaDB
+        uses: getong/mariadb-action@v1.1
+        with:
+          mysql database: 'issues-tracker'
+          mysql user: 'dbtester'
+          mysql password: 'dbpassword'
 
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
