@@ -1,13 +1,6 @@
 name: Maven CI
 
-on:
-  push:
-    branches:
-      - master
-      - gh-actions
-  pull_request:
-    branches:
-      - master
+on: [push]
 
 jobs:
   build:
