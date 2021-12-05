@@ -1,6 +1,8 @@
-name: Java CI
+name: Maven CI
 
-on: [push]
+on:
+  push:
+    branches: [ master, gh-actions ]
 
 jobs:
   build:
@@ -10,12 +12,14 @@ jobs:
       mariadb:
         image: mariadb:latest
         ports:
-          - 3306
+          - 3306/tcp
         env:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_DATABASE: issues-tracker
           MYSQL_USER: dbtester
           MYSQL_PASSWORD: dbpassword
-          MYSQL_DATABASE: issues-tracker
-          MYSQL_ROOT_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: dbpassword
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
         options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
     steps:
@@ -29,7 +33,7 @@ jobs:
 
       - name: Verify MariaDB connection
         env:
-          PORT: ${{ job.services.mariadb.ports[3306] }}
+          PORT: ${{ jobs.services.mariadb.ports[3306] }}
         run: |
           while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
             sleep 1
