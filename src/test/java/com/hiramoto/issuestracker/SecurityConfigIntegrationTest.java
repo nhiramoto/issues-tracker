@@ -40,8 +40,6 @@ public class SecurityConfigIntegrationTest {
     @Test
     public void whenLoggedUserRequestsHomePage_ThenSuccess()
             throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/user/hello").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test

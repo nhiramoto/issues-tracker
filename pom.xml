@@ -8,17 +8,21 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
-	<groupId>com.hiramoto</groupId>
-	<artifactId>issues-tracker</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
-	<name>issues-tracker</name>
-	<description>Issues tracker web application.</description>
-
 	<properties>
 		<java.version>11</java.version>
 		<servlet.version>4.0.0</servlet.version>
 	</properties>
+
+	<groupId>com.hiramoto</groupId>
+	<artifactId>issues-tracker</artifactId>
+	<version>0.0.1</version>
+	<packaging>war</packaging>
+	<name>issues-tracker</name>
+	<description>Issues tracker web application.</description>
+	<scm>
+		<connection>scm:git:https://github.com/nhiramoto/issues-tracker</connection>
+	</scm>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -95,6 +99,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>${project.name}:${project.version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -106,6 +111,47 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<id>useLastCommittedRevision</id>
+						<phase>validate</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+						<configuration>
+							<buildNumberPropertyName>buildNumber</buildNumberPropertyName>
+						</configuration>
+					</execution>
+				</executions>
+				<configuration>
+					<doCheck>false</doCheck>
+					<doUpdate>false</doUpdate>
+					<revisionOnScmFailure>unknownBuild</revisionOnScmFailure>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+						<manifestEntries>
+							<version>${project.version}</version>
+							<SCM-Build-Number>${buildNumber}</SCM-Build-Number>
+							<Implementation-Title>${project.name}</Implementation-Title>
+							<Implementation-Version>${project.version}:${buildNumber}</Implementation-Version>
+						</manifestEntries>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>
