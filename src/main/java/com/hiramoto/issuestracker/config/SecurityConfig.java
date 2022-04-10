@@ -31,28 +31,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()
-            .anyRequest().permitAll()
-            /*
-            .antMatchers("/admin/**").hasRole("ADMIN")
-            .antMatchers("/user/**").authenticated()
-            .antMatchers("/anonymous/**").anonymous()
-            .antMatchers("/public/**").permitAll()
-            .antMatchers("/static/**").permitAll()
+            // .anyRequest().permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/user/**").authenticated()
+                .antMatchers("/anonymous/**").anonymous()
+                .antMatchers("/public/**").permitAll()
+                .antMatchers("/static/**").permitAll()
+                .antMatchers("/home*").authenticated()
             .anyRequest().authenticated()
+            /*
             .and()
             .formLogin()
             .loginPage("/login.jsp")
             .loginProcessingUrl("/perform_login")
             .defaultSuccessUrl("/home.html", true)
             .failureUrl("/login.html?error=true")
+            */
             // .failureHandler(authenticationFailureHandler())
             .and()
             .logout()
             .logoutUrl("perform_logout")
             .deleteCookies("JSESSIONID")
-            */
             // .logoutSuccessHandler(logoutSuccessHandler())
-            //.httpBasic()
             ;
     }
     
