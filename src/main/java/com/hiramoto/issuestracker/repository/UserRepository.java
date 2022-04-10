@@ -1,6 +1,6 @@
-package com.hiramoto.issuestracker.persistence.repository;
+package com.hiramoto.issuestracker.repository;
 
-import com.hiramoto.issuestracker.persistence.model.User;
+import com.hiramoto.issuestracker.model.persistent.User;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
